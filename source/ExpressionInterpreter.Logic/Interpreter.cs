@@ -125,7 +125,12 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private double ScanNumber(ref int pos)
         {
-            throw new NotImplementedException();
+            double result = 0;
+
+            int left = ScanInteger(ref pos);
+
+
+            return result;
         }
         /// <summary>
         /// Eine Ganzzahl muss mit einer Ziffer beginnen.
@@ -139,11 +144,15 @@ namespace ExpressionInterpreter.Logic
             {
                 pos++;
             }
+            while (Char.IsDigit(ExpressionText[pos]))
+            {
+                pos++;
+                result += ExpressionText[pos] - '0';
+            }
             if (pos == ExpressionText.Length)
             {
                 throw new Exception("Keine weitere Ziffer vorhanden!");
             }
-            result = ExpressionText[pos] - '0';
             return result;
         }
         /// <summary>
