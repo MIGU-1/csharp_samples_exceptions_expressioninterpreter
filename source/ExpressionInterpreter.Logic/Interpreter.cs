@@ -5,7 +5,6 @@ namespace ExpressionInterpreter.Logic
 {
     public class Interpreter
     {
-        private bool isSignNegative;
         private double _operandLeft;
         private double _operandRight;
         private char _op;  // Operator                  
@@ -14,20 +13,15 @@ namespace ExpressionInterpreter.Logic
         /// Eingelesener Text
         /// </summary>
         public string ExpressionText { get; private set; }
-
         public double OperandLeft => _operandLeft;
-
         public double OperandRight => _operandRight;
-
         public char Op => _op;
-
 
         public void Parse(string expressionText)
         {
             ExpressionText = expressionText;
             ParseExpressionStringToFields();
         }
-
         /// <summary>
         /// Wertet den Ausdruck aus und gibt das Ergebnis zurück.
         /// Fehlerhafte Operatoren und Division durch 0 werden über Exceptions zurückgemeldet
@@ -70,7 +64,6 @@ namespace ExpressionInterpreter.Logic
             }
             return result;
         }
-
         /// <summary>
         /// Expressionstring in seine Bestandteile zerlegen und in die Felder speichern.
         /// 
@@ -83,41 +76,30 @@ namespace ExpressionInterpreter.Logic
         /// </summary>
         public void ParseExpressionStringToFields()
         {
-            bool isLeftOperandNegative = false;
-            bool isReightOperandNegative = false;
+            bool isNegative;
 
             for (int i = 0; i < ExpressionText.Length; i++)
             {
                 SkipBlanks(ref i);
-                isLeftOperandNegative = ScanSign(ref i);
+                isNegative = ScanSign(ref i);
                 SkipBlanks(ref i);
-                _operandLeft = ScanNumber(ref i);
+                _operandLeft = isNegative ? ScanNumber(ref i) * -1 : ScanNumber(ref i);
                 SkipBlanks(ref i);
                 _op = ScanOp(ref i);
                 SkipBlanks(ref i);
-                isReightOperandNegative = ScanSign(ref i);
+                isNegative = ScanSign(ref i);
                 SkipBlanks(ref i);
-                _operandRight = ScanNumber(ref i);
-
-                if (isLeftOperandNegative && !isReightOperandNegative)
-                    isSignNegative = true;
-                else if (!isLeftOperandNegative && isReightOperandNegative)
-                    isSignNegative = true;
-                else
-                    isSignNegative = false;
+                _operandRight = isNegative ? ScanNumber(ref i) * -1 : ScanNumber(ref i);
             }
         }
-
         private char ScanOp(ref int i)
         {
             throw new NotImplementedException();
         }
-
         private bool ScanSign(ref int i)
         {
             throw new NotImplementedException();
         }
-
         /// <summary>
         /// Ein Double muss mit einer Ziffer beginnen. Gibt es Nachkommastellen,
         /// müssen auch diese mit einer Ziffer beginnen.
@@ -128,7 +110,6 @@ namespace ExpressionInterpreter.Logic
         {
             throw new NotImplementedException();
         }
-
         /// <summary>
         /// Eine Ganzzahl muss mit einer Ziffer beginnen.
         /// </summary>
@@ -138,7 +119,6 @@ namespace ExpressionInterpreter.Logic
         {
             throw new NotImplementedException();
         }
-
         /// <summary>
         /// Setzt die Position weiter, wenn Leerzeichen vorhanden sind
         /// </summary>
@@ -150,7 +130,6 @@ namespace ExpressionInterpreter.Logic
                 pos++;
             }
         }
-
         /// <summary>
         /// Exceptionmessage samt Innerexception-Texten ausgeben
         /// </summary>
