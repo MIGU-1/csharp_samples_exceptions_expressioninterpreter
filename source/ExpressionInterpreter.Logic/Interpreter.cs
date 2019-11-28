@@ -34,7 +34,41 @@ namespace ExpressionInterpreter.Logic
         /// </summary>
         public double Calculate()
         {
-            throw new NotImplementedException();
+            double result = 0;
+            switch (_op)
+            {
+                case '+':
+                    {
+                        result = _operandLeft + _operandRight;
+                        break;
+                    }
+                case '-':
+                    {
+                        result = _operandLeft - _operandRight;
+                        break;
+                    }
+                case '*':
+                    {
+                        result = _operandLeft * _operandRight;
+                        break;
+                    }
+                case '/':
+                    {
+                        if (_operandRight != 0)
+                        {
+                            result = _operandLeft / _operandRight;
+                            break;
+                        }
+                        else
+                        {
+                            throw new DivideByZeroException();
+                        }
+                    }
+                default:
+                    Console.WriteLine($"Der Operator {_op} ist falsch!");
+                    break;
+            }
+            return result;
         }
 
         /// <summary>
@@ -111,7 +145,10 @@ namespace ExpressionInterpreter.Logic
         /// <param name="pos"></param>
         private void SkipBlanks(ref int pos)
         {
-            throw new NotImplementedException();
+            while (pos <= ExpressionText.Length && ExpressionText[pos] == ' ')
+            {
+                pos++;
+            }
         }
 
         /// <summary>
