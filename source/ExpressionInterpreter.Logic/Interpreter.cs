@@ -5,6 +5,7 @@ namespace ExpressionInterpreter.Logic
 {
     public class Interpreter
     {
+        private bool isSignNegative;
         private double _operandLeft;
         private double _operandRight;
         private char _op;  // Operator                  
@@ -47,6 +48,38 @@ namespace ExpressionInterpreter.Logic
         ///         Trennzeichen Leerzeichen zwischen OP, Vorzeichen und Zahlen
         /// </summary>
         public void ParseExpressionStringToFields()
+        {
+            bool isLeftOperandNegative = false;
+            bool isReightOperandNegative = false;
+
+            for (int i = 0; i < ExpressionText.Length; i++)
+            {
+                SkipBlanks(ref i);
+                isLeftOperandNegative = ScanSign(ref i);
+                SkipBlanks(ref i);
+                _operandLeft = ScanNumber(ref i);
+                SkipBlanks(ref i);
+                _op = ScanOp(ref i);
+                SkipBlanks(ref i);
+                isReightOperandNegative = ScanSign(ref i);
+                SkipBlanks(ref i);
+                _operandRight = ScanNumber(ref i);
+
+                if (isLeftOperandNegative && !isReightOperandNegative)
+                    isSignNegative = true;
+                else if (!isLeftOperandNegative && isReightOperandNegative)
+                    isSignNegative = true;
+                else
+                    isSignNegative = false;
+            }
+        }
+
+        private char ScanOp(ref int i)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool ScanSign(ref int i)
         {
             throw new NotImplementedException();
         }
