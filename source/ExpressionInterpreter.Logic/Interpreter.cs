@@ -144,11 +144,16 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private int ScanInteger(ref int pos)
         {
-            int result;
-            while (true)
+            int result = 0;
+            while (pos < ExpressionText.Length && !Char.IsDigit(ExpressionText[pos]))
             {
-
+                pos++;
             }
+            if (pos == ExpressionText.Length)
+            {
+                throw new Exception("Keine weitere Ziffer vorhanden!");
+            }
+            result = ExpressionText[pos] - '0';
             return result;
         }
         /// <summary>
