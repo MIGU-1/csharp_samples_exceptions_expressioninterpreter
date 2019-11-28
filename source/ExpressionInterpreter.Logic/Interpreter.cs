@@ -137,7 +137,13 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         public static string GetExceptionTextWithInnerExceptions(Exception ex)
         {
-            throw new NotImplementedException();
+            StringBuilder sb = new StringBuilder();
+            while(ex.InnerException != null)
+            {
+                ex = ex.InnerException;
+                sb.AppendLine(ex.Message);
+            }
+            return sb.ToString();
         }
     }
 }
