@@ -87,7 +87,31 @@ namespace ExpressionInterpreter.Logic
         }
         private char ScanOp(ref int i)
         {
-            throw new NotImplementedException();
+            SkipBlanks(ref i);
+
+            switch (ExpressionText[i])
+            {
+                case '+':
+                    {
+                        return '+';
+                    }
+                case '-':
+                    {
+                        return '-';
+                    }
+                case '*':
+                    {
+                        return '*';
+                    }
+                case '/':
+                    {
+                        return '/';
+                    }
+                default:
+                    {
+                        throw new Exception("Invalid Operator");
+                    }
+            }
         }
         private bool ScanSign(ref int i)
         {
