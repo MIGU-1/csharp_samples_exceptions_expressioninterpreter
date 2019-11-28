@@ -87,24 +87,26 @@ namespace ExpressionInterpreter.Logic
         }
         private char ScanOp(ref int i)
         {
-            SkipBlanks(ref i);
-
             switch (ExpressionText[i])
             {
                 case '+':
                     {
+                        i++;
                         return '+';
                     }
                 case '-':
                     {
+                        i++;
                         return '-';
                     }
                 case '*':
                     {
+                        i++;
                         return '*';
                     }
                 case '/':
                     {
+                        i++;
                         return '/';
                     }
                 default:
@@ -115,7 +117,15 @@ namespace ExpressionInterpreter.Logic
         }
         private bool ScanSign(ref int i)
         {
-            throw new NotImplementedException();
+            if (ExpressionText[i] == '-')
+            {
+                i++;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
         /// <summary>
         /// Ein Double muss mit einer Ziffer beginnen. Gibt es Nachkommastellen,
