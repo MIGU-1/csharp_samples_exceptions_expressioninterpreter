@@ -150,19 +150,16 @@ namespace ExpressionInterpreter.Logic
         private int ScanInteger(ref int pos)
         {
             int result = 0;
-            while (pos < ExpressionText.Length && !Char.IsDigit(ExpressionText[pos]))
-            {
-                pos++;
-            }
+
+            if (!Char.IsDigit(ExpressionText[pos]))
+                throw new InvalidOperationException();
+
             while (Char.IsDigit(ExpressionText[pos]))
             {
                 pos++;
                 result += ExpressionText[pos] - '0';
             }
-            if (pos == ExpressionText.Length)
-            {
-                throw new Exception("Keine weitere Ziffer vorhanden!");
-            }
+
             return result;
         }
         /// <summary>
