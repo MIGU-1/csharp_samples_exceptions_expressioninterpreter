@@ -19,10 +19,7 @@ namespace ExpressionInterpreter.Logic
 
         public double OperandRight => _operandRight;
 
-        public char Op
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public char Op => _op;
 
 
         public void Parse(string expressionText)
