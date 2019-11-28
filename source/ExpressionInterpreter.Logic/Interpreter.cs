@@ -28,30 +28,25 @@ namespace ExpressionInterpreter.Logic
         /// </summary>
         public double Calculate()
         {
-            double result = 0;
             switch (_op)
             {
                 case '+':
                     {
-                        result = _operandLeft + _operandRight;
-                        break;
+                        return _operandLeft + _operandRight;
                     }
                 case '-':
                     {
-                        result = _operandLeft - _operandRight;
-                        break;
+                        return _operandLeft - _operandRight;
                     }
                 case '*':
                     {
-                        result = _operandLeft * _operandRight;
-                        break;
+                        return _operandLeft * _operandRight;
                     }
                 case '/':
                     {
                         if (_operandRight != 0)
                         {
-                            result = _operandLeft / _operandRight;
-                            break;
+                            return _operandLeft / _operandRight;
                         }
                         else
                         {
@@ -59,10 +54,8 @@ namespace ExpressionInterpreter.Logic
                         }
                     }
                 default:
-                    Console.WriteLine($"Der Operator {_op} ist falsch!");
-                    break;
+                    throw new Exception("Operant ist falsch gewählt!");
             }
-            return result;
         }
         /// <summary>
         /// Expressionstring in seine Bestandteile zerlegen und in die Felder speichern.
@@ -117,7 +110,12 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private int ScanInteger(ref int pos)
         {
-            throw new NotImplementedException();
+            int result;
+            while (true)
+            {
+
+            }
+            return result;
         }
         /// <summary>
         /// Setzt die Position weiter, wenn Leerzeichen vorhanden sind
@@ -138,7 +136,7 @@ namespace ExpressionInterpreter.Logic
         public static string GetExceptionTextWithInnerExceptions(Exception ex)
         {
             StringBuilder sb = new StringBuilder();
-            while(ex.InnerException != null)
+            while (ex.InnerException != null)
             {
                 ex = ex.InnerException;
                 sb.AppendLine(ex.Message);
