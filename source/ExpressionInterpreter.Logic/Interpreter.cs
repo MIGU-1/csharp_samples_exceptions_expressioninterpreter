@@ -139,6 +139,10 @@ namespace ExpressionInterpreter.Logic
             {
                 pos++;
             }
+            if (pos == ExpressionText.Length)
+            {
+                throw new Exception("Keine weitere Ziffer vorhanden!");
+            }
             result = ExpressionText[pos] - '0';
             return result;
         }
