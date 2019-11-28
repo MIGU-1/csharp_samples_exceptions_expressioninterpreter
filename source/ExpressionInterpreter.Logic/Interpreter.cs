@@ -15,13 +15,12 @@ namespace ExpressionInterpreter.Logic
         public string ExpressionText { get; private set; }
 
         public double OperandLeft => _operandLeft;
-        
 
         public double OperandRight => _operandRight;
 
         public char Op
         {
-            get { throw new NotImplementedException(); }
+            get { return _op; }
         }
 
 
