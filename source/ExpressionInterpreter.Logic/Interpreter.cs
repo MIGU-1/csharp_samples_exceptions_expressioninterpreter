@@ -14,10 +14,8 @@ namespace ExpressionInterpreter.Logic
         /// </summary>
         public string ExpressionText { get; private set; }
 
-        public double OperandLeft
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public double OperandLeft => _operandLeft;
+        
 
         public double OperandRight
         {
