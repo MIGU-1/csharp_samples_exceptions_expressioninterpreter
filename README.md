@@ -1,5 +1,9 @@
 # Expression Interpreter
 
+* TEAM
+* Simon Aichmayr
+* Michael Gutenbrunner
+
 ## Lehrziele
 
 * Exception Handling
