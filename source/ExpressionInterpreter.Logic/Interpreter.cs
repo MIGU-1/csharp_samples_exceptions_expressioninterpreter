@@ -110,12 +110,13 @@ namespace ExpressionInterpreter.Logic
         /// <returns></returns>
         private int ScanInteger(ref int pos)
         {
-            int result;
-            while (true)
-            {
+            //int result;
+            //while (pos < ExpressionText.Length)
+            //{
 
-            }
-            return result;
+            //}
+            //return result;
+            throw new NotImplementedException();
         }
         /// <summary>
         /// Setzt die Position weiter, wenn Leerzeichen vorhanden sind
