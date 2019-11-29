@@ -53,7 +53,7 @@ namespace ExpressionInterpreter.Logic
                         }
                         else
                         {
-                            throw new DivideByZeroException();
+                            throw new DivideByZeroException("Exceptionmessage: Division durch 0 ist nicht erlaubt");
                         }
                     }
                 default:
@@ -90,98 +90,61 @@ namespace ExpressionInterpreter.Logic
         }
         private char ScanOp(ref int i)
         {
+            char op = char.MinValue;
             switch (ExpressionText[i])
             {
                 case '+':
                     {
-                        i++;
-                        return '+';
+                        op = '+';
+                        break;
                     }
                 case '-':
                     {
-                        i++;
-                        return '-';
+                        op = '-';
+                        break;
                     }
                 case '*':
                     {
-                        i++;
-                        return '*';
+                        op = '*';
+                        break;
                     }
                 case '/':
                     {
-                        i++;
-                        return '/';
+                        op = '/';
+                        break;
                     }
                 default:
                     {
-                        throw new Exception("Invalid Operator");
+                        throw new Exception($"Operator {ExpressionText[i]} ist fehlerhaft!");
                     }
             }
-        }
-        private bool ScanSign(ref int i)
-        {
-            if (ExpressionText[i] == '-')
+            if (i + 1 < ExpressionText.Length)
             {
                 i++;
-                return true;
             }
             else
             {
-                return false;
+                //throw new ArgumentException("");
             }
-        }
-        /// <summary>
-        /// Ein Double muss mit einer Ziffer beginnen. Gibt es Nachkommastellen,
-        /// müssen auch diese mit einer Ziffer beginnen.
-        /// </summary>
-        /// <param name="pos"></param>
-        /// <returns></returns>
-        private double ScanNumber(ref int pos)
-        {
-            double result = 0;
-
-            int leftInt = ScanInteger(ref pos);
-
-            if (ExpressionText[pos] == ',')
-            {
-                pos++;
-                int rightInt = ScanInteger(ref pos);
-                result = leftInt + GetDoubleFromInt(rightInt);
-            }
-            else
-            {
-                result = leftInt;
-            }
-
-            return result;
-        }
-        private double GetDoubleFromInt(int rightInt)
-        {
-            int counter = -10;
-            int tmp = rightInt;
-
-            while (tmp > 0)
-            {
-                tmp /= 10;
-                counter += 10;
-            }
-
-            return counter == 0 ? (double)rightInt / 10 : (double)rightInt / counter;
+            return op;
         }
         /// <summary>
         /// Eine Ganzzahl muss mit einer Ziffer beginnen.
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        private int ScanInteger(ref int pos)
+        private int ScanInteger(ref int pos, ref ArgumentException ex)
         {
             int result = 0;
             int counter = -10;
             int i = pos;
-
             if (!Char.IsDigit(ExpressionText[pos]))
-                throw new InvalidOperationException();
-
+            {
+                if (ExpressionText[pos] == ',')
+                {
+                    ex = new ArgumentException("Ganzzahlanteil ist fehlerhaft");
+                }
+            }
             while (i < ExpressionText.Length && Char.IsDigit(ExpressionText[i]))
             {
                 counter += 10;
@@ -206,7 +169,7 @@ namespace ExpressionInterpreter.Logic
         /// <param name="pos"></param>
         private void SkipBlanks(ref int pos)
         {
-            while (pos <= ExpressionText.Length && ExpressionText[pos] == ' ')
+            while (pos < ExpressionText.Length && ExpressionText[pos] == ' ')
             {
                 pos++;
             }
@@ -219,12 +182,83 @@ namespace ExpressionInterpreter.Logic
         public static string GetExceptionTextWithInnerExceptions(Exception ex)
         {
             StringBuilder sb = new StringBuilder();
+            if (ex.InnerException == null)
+            {
+                sb.AppendLine(ex.Message);
+            }
             while (ex.InnerException != null)
             {
                 ex = ex.InnerException;
                 sb.AppendLine(ex.Message);
             }
             return sb.ToString();
+        }
+        private bool ScanSign(ref int i)
+        {
+            if (ExpressionText[i] == '-')
+            {
+                i++;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        /// <summary>
+        /// Ein Double muss mit einer Ziffer beginnen. Gibt es Nachkommastellen,
+        /// müssen auch diese mit einer Ziffer beginnen.
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        private double ScanNumber(ref int pos)
+        {
+            double result = 0;
+            ArgumentException ex = null;
+            bool isException = true;
+            if (pos + 1 < ExpressionText.Length)
+            {
+                int leftInt = ScanInteger(ref pos, ref ex);
+                if (ex == null)
+                {
+                    isException = false;
+                    if (ExpressionText[pos] == ',')
+                    {
+                        pos++;
+                        int rightInt = ScanInteger(ref pos, ref ex);
+                        result = leftInt + GetDoubleFromInt(rightInt);
+                    }
+                    else
+                    {
+                        result = leftInt;
+                    }
+                }
+            }
+            if (isException)
+            {
+                if (ExpressionText[pos] == _op)
+                {
+                    throw new ArgumentException("Rechter Operand ist fehlerhaft", ex);
+                }
+                else
+                {
+                    throw new ArgumentException("Linker Operand ist fehlerhaft", ex);
+                }
+            }
+            return result;
+        }
+        private double GetDoubleFromInt(int rightInt)
+        {
+            int counter = -10;
+            int tmp = rightInt;
+
+            while (tmp > 0)
+            {
+                tmp /= 10;
+                counter += 10;
+            }
+
+            return counter == 0 ? (double)rightInt / 10 : (double)rightInt / counter;
         }
     }
 }
