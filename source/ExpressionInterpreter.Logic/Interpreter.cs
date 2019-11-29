@@ -19,6 +19,9 @@ namespace ExpressionInterpreter.Logic
 
         public void Parse(string expressionText)
         {
+            if (String.IsNullOrWhiteSpace(expressionText))
+                throw new Exception("Ausdruck ist null oder empty!");
+
             ExpressionText = expressionText;
             ParseExpressionStringToFields();
         }
@@ -137,10 +140,33 @@ namespace ExpressionInterpreter.Logic
         {
             double result = 0;
 
-            int left = ScanInteger(ref pos);
+            int leftInt = ScanInteger(ref pos);
 
+            if (ExpressionText[pos] == ',')
+            {
+                pos++;
+                int rightInt = ScanInteger(ref pos);
+                result = leftInt + GetDoubleFromInt(rightInt);
+            }
+            else
+            {
+                result = leftInt;
+            }
 
             return result;
+        }
+        private double GetDoubleFromInt(int rightInt)
+        {
+            int counter = -10;
+            int tmp = rightInt;
+
+            while (tmp > 0)
+            {
+                tmp /= 10;
+                counter += 10;
+            }
+
+            return counter == 0 ? (double)rightInt / 10 : (double)rightInt / counter;
         }
         /// <summary>
         /// Eine Ganzzahl muss mit einer Ziffer beginnen.
@@ -150,14 +176,26 @@ namespace ExpressionInterpreter.Logic
         private int ScanInteger(ref int pos)
         {
             int result = 0;
+            int counter = -10;
+            int i = pos;
 
             if (!Char.IsDigit(ExpressionText[pos]))
                 throw new InvalidOperationException();
 
-            while (Char.IsDigit(ExpressionText[pos]))
+            while (i < ExpressionText.Length && Char.IsDigit(ExpressionText[i]))
             {
+                counter += 10;
+                i++;
+            }
+
+            if (counter == 0)
+                counter++;
+
+            while (pos < ExpressionText.Length && Char.IsDigit(ExpressionText[pos]))
+            {
+                result += (ExpressionText[pos] - '0') * counter;
+                counter -= 10;
                 pos++;
-                result += ExpressionText[pos] - '0';
             }
 
             return result;

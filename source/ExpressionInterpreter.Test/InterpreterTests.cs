@@ -7,6 +7,7 @@ namespace ExpressionInterpreter.Test
     [TestClass]
     public class InterpreterTests
     {
+
         [TestMethod()]
         public void Constructor_EmptyExpression_ShouldThrowParseException()
         {
