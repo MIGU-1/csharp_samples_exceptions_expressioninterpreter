@@ -8,7 +8,7 @@ namespace ExpressionInterpreter.Logic
         private double _operandLeft;
         private double _operandRight;
         private char _op;  // Operator                  
-
+        private ArgumentException _exception;
         /// <summary>
         /// Eingelesener Text
         /// </summary>
@@ -124,7 +124,7 @@ namespace ExpressionInterpreter.Logic
             }
             else
             {
-                //throw new ArgumentException("");
+                _exception = new ArgumentException();
             }
             return op;
         }
@@ -133,7 +133,7 @@ namespace ExpressionInterpreter.Logic
         /// </summary>
         /// <param name="pos"></param>
         /// <returns></returns>
-        private int ScanInteger(ref int pos, ref ArgumentException ex)
+        private int ScanInteger(ref int pos)
         {
             int result = 0;
             int counter = -10;
@@ -142,7 +142,7 @@ namespace ExpressionInterpreter.Logic
             {
                 if (ExpressionText[pos] == ',')
                 {
-                    ex = new ArgumentException("Ganzzahlanteil ist fehlerhaft");
+                    _exception = new ArgumentException("Ganzzahlanteil ist fehlerhaft");
                 }
             }
             while (i < ExpressionText.Length && Char.IsDigit(ExpressionText[i]))
@@ -214,18 +214,17 @@ namespace ExpressionInterpreter.Logic
         private double ScanNumber(ref int pos)
         {
             double result = 0;
-            ArgumentException ex = null;
             bool isException = true;
             if (pos + 1 < ExpressionText.Length)
             {
-                int leftInt = ScanInteger(ref pos, ref ex);
-                if (ex == null)
+                int leftInt = ScanInteger(ref pos);
+                if (_exception == null)
                 {
                     isException = false;
                     if (ExpressionText[pos] == ',')
                     {
                         pos++;
-                        int rightInt = ScanInteger(ref pos, ref ex);
+                        int rightInt = ScanInteger(ref pos);
                         result = leftInt + GetDoubleFromInt(rightInt);
                     }
                     else
@@ -238,11 +237,11 @@ namespace ExpressionInterpreter.Logic
             {
                 if (ExpressionText[pos] == _op)
                 {
-                    throw new ArgumentException("Rechter Operand ist fehlerhaft", ex);
+                    throw new ArgumentException("Rechter Operand ist fehlerhaft", _exception);
                 }
                 else
                 {
-                    throw new ArgumentException("Linker Operand ist fehlerhaft", ex);
+                    throw new ArgumentException("Linker Operand ist fehlerhaft", _exception);
                 }
             }
             return result;
