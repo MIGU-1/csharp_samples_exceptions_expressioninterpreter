@@ -242,7 +242,7 @@ namespace ExpressionInterpreter.Logic
             }
             if (isException)
             {
-                if (ExpressionText[pos] == ',' || ExpressionText[pos - 1] == ',')
+                if (ExpressionText[pos - 1] == _op || ExpressionText[pos] == _op)
                 {
                     throw new ArgumentException("Rechter Operand ist fehlerhaft", _exception);
                 }
