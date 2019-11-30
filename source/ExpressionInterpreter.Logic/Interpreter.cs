@@ -124,7 +124,7 @@ namespace ExpressionInterpreter.Logic
             }
             else
             {
-                _exception = new ArgumentException();
+                _exception = new ArgumentException("Zahl fehlt komplett");
             }
             return op;
         }
@@ -235,7 +235,7 @@ namespace ExpressionInterpreter.Logic
             }
             if (isException)
             {
-                if (ExpressionText[pos] == _op)
+                if (ExpressionText[pos] == ',' || ExpressionText[pos-1] == ',')
                 {
                     throw new ArgumentException("Rechter Operand ist fehlerhaft", _exception);
                 }
