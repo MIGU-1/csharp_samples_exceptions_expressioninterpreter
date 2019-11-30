@@ -220,12 +220,19 @@ namespace ExpressionInterpreter.Logic
                 int leftInt = ScanInteger(ref pos);
                 if (_exception == null)
                 {
-                    isException = false;
                     if (ExpressionText[pos] == ',')
                     {
-                        pos++;
-                        int rightInt = ScanInteger(ref pos);
-                        result = leftInt + GetDoubleFromInt(rightInt);
+                        if (pos + 1 < ExpressionText.Length)
+                        {
+                            isException = false;
+                            pos++;
+                            int rightInt = ScanInteger(ref pos);
+                            result = leftInt + GetDoubleFromInt(rightInt);
+                        }
+                        else
+                        {
+                            _exception = new ArgumentException("Nachkommaanteil ist fehlerhaft");
+                        }
                     }
                     else
                     {
@@ -235,7 +242,7 @@ namespace ExpressionInterpreter.Logic
             }
             if (isException)
             {
-                if (ExpressionText[pos] == ',' || ExpressionText[pos-1] == ',')
+                if (ExpressionText[pos] == ',' || ExpressionText[pos - 1] == ',')
                 {
                     throw new ArgumentException("Rechter Operand ist fehlerhaft", _exception);
                 }
