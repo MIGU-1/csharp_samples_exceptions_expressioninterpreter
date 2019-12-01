@@ -145,17 +145,19 @@ namespace ExpressionInterpreter.Logic
                     _exception = new ArgumentException("Ganzzahlanteil ist fehlerhaft");
                 }
             }
+
             while (i < ExpressionText.Length && Char.IsDigit(ExpressionText[i]))
             {
                 counter += 10;
                 i++;
             }
 
-            if (counter == 0)
-                counter++;
-
             while (pos < ExpressionText.Length && Char.IsDigit(ExpressionText[pos]))
             {
+                if (counter == 0 && Char.IsDigit(ExpressionText[pos]))
+                {
+                    counter++;
+                }
                 result += (ExpressionText[pos] - '0') * counter;
                 counter -= 10;
                 pos++;
@@ -214,42 +216,35 @@ namespace ExpressionInterpreter.Logic
         private double ScanNumber(ref int pos)
         {
             double result = 0;
-            bool isException = true;
-            if (pos + 1 < ExpressionText.Length)
+
+            int leftInt = ScanInteger(ref pos);
+            if (_exception == null)
             {
-                int leftInt = ScanInteger(ref pos);
-                if (_exception == null)
+                if (ExpressionText[pos] == ',' && pos < ExpressionText.Length)
                 {
-                    if (ExpressionText[pos] == ',')
+                    if (!Char.IsDigit(ExpressionText[pos + 1]))
                     {
-                        if (pos + 1 < ExpressionText.Length)
-                        {
-                            isException = false;
-                            pos++;
-                            int rightInt = ScanInteger(ref pos);
-                            result = leftInt + GetDoubleFromInt(rightInt);
-                        }
-                        else
-                        {
-                            _exception = new ArgumentException("Nachkommaanteil ist fehlerhaft");
-                        }
+                        _exception = new ArgumentException("Nachkommaanteil ist fehlerhaft",);
                     }
                     else
                     {
-                        result = leftInt;
+                        pos++;
+                        int rightInt = ScanInteger(ref pos);
+                        result = leftInt + GetDoubleFromInt(rightInt);
                     }
                 }
+                else
+                {
+                    result = leftInt;
+                }
             }
-            if (isException)
+            if (_exception != null)
             {
                 if (ExpressionText[pos - 1] == _op || ExpressionText[pos] == _op)
                 {
                     throw new ArgumentException("Rechter Operand ist fehlerhaft", _exception);
                 }
-                else
-                {
-                    throw new ArgumentException("Linker Operand ist fehlerhaft", _exception);
-                }
+                throw new ArgumentException("Linker Operand ist fehlerhaft", _exception);
             }
             return result;
         }
