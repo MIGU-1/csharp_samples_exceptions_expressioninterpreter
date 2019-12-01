@@ -184,13 +184,13 @@ namespace ExpressionInterpreter.Logic
         public static string GetExceptionTextWithInnerExceptions(Exception ex)
         {
             StringBuilder sb = new StringBuilder();
-            if (ex.InnerException == null)
-            {
-                sb.AppendLine(ex.Message);
-            }
             while (ex.InnerException != null)
             {
+                sb.AppendLine(ex.Message);
                 ex = ex.InnerException;
+            }
+            if (ex.InnerException == null)
+            {
                 sb.AppendLine(ex.Message);
             }
             return sb.ToString();
@@ -224,7 +224,7 @@ namespace ExpressionInterpreter.Logic
                 {
                     if (!Char.IsDigit(ExpressionText[pos + 1]))
                     {
-                        _exception = new ArgumentException("Nachkommaanteil ist fehlerhaft",);
+                        _exception = new ArgumentException("Nachkommaanteil ist fehlerhaft");
                     }
                     else
                     {
