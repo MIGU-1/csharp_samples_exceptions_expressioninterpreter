@@ -222,9 +222,10 @@ namespace ExpressionInterpreter.Logic
             {
                 if (ExpressionText[pos] == ',' && pos < ExpressionText.Length)
                 {
-                    if (!Char.IsDigit(ExpressionText[pos + 1]))
+                    if (pos + 1 >= ExpressionText.Length || !Char.IsDigit(ExpressionText[pos + 1]))
                     {
-                        _exception = new ArgumentException("Nachkommaanteil ist fehlerhaft");
+                        Exception ex = new ArgumentException("Integeranteil fehlt oder beginnt nicht mit Ziffer");
+                        _exception = new ArgumentException("Nachkommaanteil ist fehlerhaft", ex);
                     }
                     else
                     {
@@ -240,7 +241,7 @@ namespace ExpressionInterpreter.Logic
             }
             if (_exception != null)
             {
-                if (ExpressionText[pos - 1] == _op || ExpressionText[pos] == _op)
+                if (!Char.IsWhiteSpace(_op))
                 {
                     throw new ArgumentException("Rechter Operand ist fehlerhaft", _exception);
                 }
