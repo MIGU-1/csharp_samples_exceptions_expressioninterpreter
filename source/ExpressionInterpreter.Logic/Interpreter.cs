@@ -216,11 +216,11 @@ namespace ExpressionInterpreter.Logic
         private double ScanNumber(ref int pos)
         {
             double result = 0;
-
+            bool isInteger = true;
             int leftInt = ScanInteger(ref pos);
-            if (_exception == null)
+            if (pos < ExpressionText.Length)
             {
-                if (ExpressionText[pos] == ',' && pos < ExpressionText.Length)
+                if (_exception == null && ExpressionText[pos] == ',')
                 {
                     if (pos + 1 >= ExpressionText.Length || !Char.IsDigit(ExpressionText[pos + 1]))
                     {
@@ -233,12 +233,14 @@ namespace ExpressionInterpreter.Logic
                         int rightInt = ScanInteger(ref pos);
                         result = leftInt + GetDoubleFromInt(rightInt);
                     }
-                }
-                else
-                {
-                    result = leftInt;
+                    isInteger = false;
                 }
             }
+            if(isInteger)
+            {
+                result = leftInt;
+            }
+
             if (_exception != null)
             {
                 if (Char.IsWhiteSpace(_op))
