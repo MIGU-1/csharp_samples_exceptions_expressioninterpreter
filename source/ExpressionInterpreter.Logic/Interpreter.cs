@@ -7,7 +7,7 @@ namespace ExpressionInterpreter.Logic
     {
         private double _operandLeft;
         private double _operandRight;
-        private char _op;  // Operator                  
+        private char _op = ' ';  // Operator                  
         private ArgumentException _exception;
         /// <summary>
         /// Eingelesener Text
@@ -53,7 +53,7 @@ namespace ExpressionInterpreter.Logic
                         }
                         else
                         {
-                            throw new DivideByZeroException("Exceptionmessage: Division durch 0 ist nicht erlaubt");
+                            throw new DivideByZeroException("Division durch 0 ist nicht erlaubt");
                         }
                     }
                 default:
@@ -184,14 +184,14 @@ namespace ExpressionInterpreter.Logic
         public static string GetExceptionTextWithInnerExceptions(Exception ex)
         {
             StringBuilder sb = new StringBuilder();
+            int count = 1;
+
+            sb.AppendLine($"Exceptionmessage: {ex.Message}");
             while (ex.InnerException != null)
             {
-                sb.AppendLine(ex.Message);
                 ex = ex.InnerException;
-            }
-            if (ex.InnerException == null)
-            {
-                sb.AppendLine(ex.Message);
+                sb.AppendLine($"Inner Exception {count}: {ex.Message}");
+                count++;
             }
             return sb.ToString();
         }
@@ -241,11 +241,11 @@ namespace ExpressionInterpreter.Logic
             }
             if (_exception != null)
             {
-                if (!Char.IsWhiteSpace(_op))
+                if (Char.IsWhiteSpace(_op))
                 {
-                    throw new ArgumentException("Rechter Operand ist fehlerhaft", _exception);
+                    throw new ArgumentException("Linker Operand ist fehlerhaft", _exception);
                 }
-                throw new ArgumentException("Linker Operand ist fehlerhaft", _exception);
+                throw new ArgumentException("Rechter Operand ist fehlerhaft", _exception);
             }
             return result;
         }
