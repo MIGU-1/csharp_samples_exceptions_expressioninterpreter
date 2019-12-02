@@ -140,10 +140,7 @@ namespace ExpressionInterpreter.Logic
             int i = pos;
             if (!Char.IsDigit(ExpressionText[pos]))
             {
-                if (ExpressionText[pos] == ',')
-                {
-                    _exception = new ArgumentException("Ganzzahlanteil ist fehlerhaft");
-                }
+                _exception = new ArgumentException("Ganzzahlanteil ist fehlerhaft");
             }
 
             while (i < ExpressionText.Length && Char.IsDigit(ExpressionText[i]))
@@ -236,7 +233,7 @@ namespace ExpressionInterpreter.Logic
                     isInteger = false;
                 }
             }
-            if(isInteger)
+            if (isInteger)
             {
                 result = leftInt;
             }
