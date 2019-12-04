@@ -22,6 +22,7 @@ namespace ExpressionInterpreter.Logic
             if (String.IsNullOrWhiteSpace(expressionText))
                 throw new Exception("Ausdruck ist null oder empty!");
 
+            _exception = null;
             ExpressionText = expressionText;
             ParseExpressionStringToFields();
         }
@@ -76,6 +77,7 @@ namespace ExpressionInterpreter.Logic
 
             for (int i = 0; i < ExpressionText.Length; i++)
             {
+                
                 SkipBlanks(ref i);
                 isNegative = ScanSign(ref i);
                 SkipBlanks(ref i);
@@ -213,29 +215,32 @@ namespace ExpressionInterpreter.Logic
         private double ScanNumber(ref int pos)
         {
             double result = 0;
-            bool isInteger = true;
-            int leftInt = ScanInteger(ref pos);
-            if (pos < ExpressionText.Length)
+            if (_exception == null)
             {
-                if (_exception == null && ExpressionText[pos] == ',')
+                bool isInteger = true;
+                int leftInt = ScanInteger(ref pos);
+                if (pos < ExpressionText.Length)
                 {
-                    if (pos + 1 >= ExpressionText.Length || !Char.IsDigit(ExpressionText[pos + 1]))
+                    if (ExpressionText[pos] == ',')
                     {
-                        Exception ex = new ArgumentException("Integeranteil fehlt oder beginnt nicht mit Ziffer");
-                        _exception = new ArgumentException("Nachkommaanteil ist fehlerhaft", ex);
+                        if (pos + 1 >= ExpressionText.Length || !Char.IsDigit(ExpressionText[pos + 1]))
+                        {
+                            Exception ex = new ArgumentException("Integeranteil fehlt oder beginnt nicht mit Ziffer");
+                            _exception = new ArgumentException("Nachkommaanteil ist fehlerhaft", ex);
+                        }
+                        else
+                        {
+                            pos++;
+                            int rightInt = ScanInteger(ref pos);
+                            result = leftInt + GetDoubleFromInt(rightInt);
+                        }
+                        isInteger = false;
                     }
-                    else
-                    {
-                        pos++;
-                        int rightInt = ScanInteger(ref pos);
-                        result = leftInt + GetDoubleFromInt(rightInt);
-                    }
-                    isInteger = false;
                 }
-            }
-            if (isInteger)
-            {
-                result = leftInt;
+                if (isInteger)
+                {
+                    result = leftInt;
+                }
             }
 
             if (_exception != null)
